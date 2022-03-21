@@ -14,7 +14,6 @@ public class ModeratedPost extends PostsBase {
     )
     private Set<Tag> tags;
 
-    @Column(name = "book_author")
     @ManyToOne(fetch = FetchType.LAZY)
     private BookAuthor bookAuthor;
 
