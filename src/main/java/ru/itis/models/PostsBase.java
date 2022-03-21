@@ -15,14 +15,14 @@ public abstract class PostsBase {
 
     @Id
     @Column(name = "id")
-    private UUID id;
+    protected UUID id;
 
     @Column(name = "post_text", columnDefinition = "text")
-    private String postText;
+    protected String postText;
 
     @Column(name = "book_name")
-    private String bookName;
+    protected String bookName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private DefaultUser author;
+    protected DefaultUser author;
 }
