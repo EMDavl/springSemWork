@@ -52,4 +52,19 @@ public class User {
     @ManyToMany(mappedBy = "subscribers")
     private Set<User> subscriptions;
 
+    @ManyToMany()
+    @JoinTable(
+            name = "likes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
+    )
+    private Set<ModeratedPost> likedPosts;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "dislikes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
+    )
+    private Set<ModeratedPost> dislikedPosts;
 }

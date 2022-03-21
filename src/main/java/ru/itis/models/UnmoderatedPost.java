@@ -21,9 +21,6 @@ public class UnmoderatedPost extends PostsBase {
     @Column(name = "book_author")
     private String bookAuthor;
 
-    @Column(name = "is_on_judge")
-    private boolean isOnJudge;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private User editor;
 }
