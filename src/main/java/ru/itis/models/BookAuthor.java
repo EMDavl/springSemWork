@@ -9,20 +9,20 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "tags")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Tag {
+@Table(name = "book_authors")
+public class BookAuthor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tag_name")
-    private String name;
+    @Column
+    private String value;
 
-    @ManyToMany(mappedBy = "tags")
+    @OneToMany(mappedBy = "bookAuthor", fetch = FetchType.LAZY)
     private Set<ModeratedPost> posts;
 }
