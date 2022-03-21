@@ -12,6 +12,5 @@ public class ModeratedPost extends PostsBase {
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
     )
-    protected Set<Tag> tags;
-
+    private Set<Tag> tags;
 }
