@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "tags")
@@ -23,6 +22,4 @@ public class Tag {
     @Column(name = "tag_name")
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
-    private Set<ModeratedPost> posts;
 }
