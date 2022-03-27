@@ -5,13 +5,14 @@ import ru.itis.dto.PostRequestDto;
 import ru.itis.models.ModeratedPost;
 import ru.itis.models.User;
 
+import java.util.List;
 import java.util.Set;
 
 public interface PostService {
 
     ModeratedPost save(PostRequestDto post);
 
-    Page<ModeratedPost> getWithPagination(Integer lastPageElement, Integer pagingLimit);
+    Page<ModeratedPost> getWithPagination(Integer page, Integer size);
 
     ModeratedPost delete(Long id);
 
@@ -19,4 +20,7 @@ public interface PostService {
 
     void changeRating(Set<User> liked, Set<User> disliked);
 
+    List<ModeratedPost> findAll();
+
+    boolean postExist(Long postId);
 }

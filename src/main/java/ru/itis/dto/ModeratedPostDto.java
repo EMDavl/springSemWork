@@ -8,7 +8,9 @@ import ru.itis.models.BookAuthor;
 import ru.itis.models.ModeratedPost;
 import ru.itis.models.Tag;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -34,6 +36,10 @@ public class ModeratedPostDto {
                 .tags(post.getTags())
                 .bookAuthor(post.getBookAuthor())
                 .build();
+    }
+
+    public static List<ModeratedPostDto> from(List<ModeratedPost> posts) {
+        return posts.stream().map(ModeratedPostDto::from).collect(Collectors.toList());
     }
 
 }

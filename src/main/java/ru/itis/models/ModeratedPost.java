@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -25,7 +26,7 @@ public class ModeratedPost extends PostsBase {
     )
     private Set<Tag> tags;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private BookAuthor bookAuthor;
 
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.LAZY)
@@ -33,4 +34,6 @@ public class ModeratedPost extends PostsBase {
 
     @ManyToMany(mappedBy = "dislikedPosts", fetch = FetchType.LAZY)
     private Set<User> disliked;
+
+    private Timestamp creationTime;
 }

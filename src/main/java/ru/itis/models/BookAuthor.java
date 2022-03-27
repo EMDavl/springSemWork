@@ -1,10 +1,7 @@
 package ru.itis.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Table(name = "book_authors")
+@EqualsAndHashCode(exclude = "posts")
 public class BookAuthor {
 
     @Id

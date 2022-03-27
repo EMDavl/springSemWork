@@ -3,6 +3,9 @@ package ru.itis.services;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.itis.dto.PostRequestDto;
 import ru.itis.models.BookAuthor;
@@ -15,6 +18,7 @@ import ru.itis.repositories.TagRepository;
 import ru.itis.repositories.UserRepository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,21 +38,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ModeratedPost save(PostRequestDto post) {
+
         Set<Tag> tags = getPostTags(post.getTags());
         BookAuthor author = getBookAuthor(post.getBookAuthor());
+
+        //TODO This is only for test purposes, must be removed later !!!
         User postAuthor = userRepository.save(User.builder().nickname("Super Papik").build());
 
-        ModeratedPost toBeSaved = ModeratedPost.builder()
-                .bookAuthor(author)
-                .tags(tags)
-                .liked(new HashSet<>())
-                .disliked(new HashSet<>())
-                .postText(post.getPostText())
-                .bookName(post.getBookName())
-                .author(postAuthor)
-                .build();
-
+        ModeratedPost toBeSaved = createPost(post, postAuthor, tags, author);
         author.getPosts().add(toBeSaved);
+
         return postsRepository.save(toBeSaved);
     }
 
@@ -79,14 +78,36 @@ public class PostServiceImpl implements PostService {
                                 .build()));
     }
 
+
+    private ModeratedPost createPost(PostRequestDto post, User postAuthor, Set<Tag> tags, BookAuthor author) {
+
+        return ModeratedPost.builder()
+                .bookAuthor(author)
+                .tags(tags)
+                .liked(new HashSet<>())
+                .disliked(new HashSet<>())
+                .postText(post.getPostText())
+                .bookName(post.getBookName())
+                .author(postAuthor)
+                .build();
+    }
+
     @Override
-    public Page<ModeratedPost> getWithPagination(Integer lastPageElement, Integer pagingLimit) {
-        return null;
+    public Page<ModeratedPost> getWithPagination(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "creation_time"));
+        return postsRepository.findAll(pageable);
     }
 
     @Override
     public ModeratedPost delete(Long id) {
-        return null;
+        ModeratedPost moderatedPost = postsRepository.findById(id).get();
+        moderatedPost.getAuthor().getModeratedPosts().remove(moderatedPost);
+        moderatedPost.getAuthor().getDislikedPosts().remove(moderatedPost);
+        moderatedPost.getAuthor().getLikedPosts().remove(moderatedPost);
+
+        postsRepository.delete(moderatedPost);
+
+        return moderatedPost;
     }
 
     @Override
@@ -97,5 +118,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public void changeRating(Set<User> liked, Set<User> disliked) {
         throw new NotYetImplementedException("Rating changes currently not supported");
+    }
+
+    @Override
+    public List<ModeratedPost> findAll() {
+        return postsRepository.findAll();
+    }
+
+    @Override
+    public boolean postExist(Long postId) {
+        return postsRepository.findById(postId).isPresent();
     }
 }
