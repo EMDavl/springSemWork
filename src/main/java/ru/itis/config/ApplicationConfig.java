@@ -42,12 +42,12 @@ public class ApplicationConfig {
     private Environment environment;
 
     @Bean
-    public DataSource dataSource(HikariConfig hikariConfig){
+    public DataSource dataSource(HikariConfig hikariConfig) {
         return new HikariDataSource(hikariConfig);
     }
 
     @Bean
-    public HikariConfig hikariConfig(){
+    public HikariConfig hikariConfig() {
         HikariConfig config = new HikariConfig();
         config.setMaximumPoolSize(Objects.requireNonNull(
                 environment.getProperty("db.hikari.max-pool-size", Integer.class)));

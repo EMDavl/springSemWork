@@ -99,7 +99,7 @@ public class UsersServiceImpl implements UsersService {
             tokenRepository.delete(token);
             return;
         }
-        
+
         user.setStatus(User.ACCOUNT_STATUS.CONFIRMED);
         userRepository.save(user);
         tokenRepository.delete(token);
