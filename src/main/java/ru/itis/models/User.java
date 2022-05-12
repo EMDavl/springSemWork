@@ -39,6 +39,7 @@ public class User {
     @OneToMany(mappedBy = "author", targetEntity = UnmoderatedPost.class)
     private Set<UnmoderatedPost> unmoderatedPosts;
 
+    @Column(name = "is_public_account")
     private boolean isPublicAccount;
 
     @ManyToMany()
