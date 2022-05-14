@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -40,12 +42,12 @@ public class ApplicationConfig {
     private Environment environment;
 
     @Bean
-    public DataSource dataSource(HikariConfig hikariConfig){
+    public DataSource dataSource(HikariConfig hikariConfig) {
         return new HikariDataSource(hikariConfig);
     }
 
     @Bean
-    public HikariConfig hikariConfig(){
+    public HikariConfig hikariConfig() {
         HikariConfig config = new HikariConfig();
         config.setMaximumPoolSize(Objects.requireNonNull(
                 environment.getProperty("db.hikari.max-pool-size", Integer.class)));
@@ -112,8 +114,34 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JavaMailSender mailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(environment.getProperty("mail.host"));
+        mailSender.setPort(Integer.parseInt(Objects.requireNonNull(environment.getProperty("mail.port"))));
+
+        mailSender.setUsername(environment.getProperty("mail.user"));
+        mailSender.setPassword(environment.getProperty("mail.password"));
+
+        Properties props = mailSender.getJavaMailProperties();
+
+        props.put("mail.transport.protocol",
+                environment.getProperty("mail.transport.protocol"));
+
+        props.put("mail.smtp.auth",
+                environment.getProperty("mail.smtp.auth"));
+
+        props.put("mail.smtp.starttls.enable",
+                environment.getProperty("mail.smtp.starttls.enable"));
+
+        props.put("mail.debug",
+                environment.getProperty("mail.debug"));
+
+        return mailSender;
     }
 
 }

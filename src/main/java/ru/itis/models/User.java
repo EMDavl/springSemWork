@@ -1,6 +1,7 @@
 package ru.itis.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.models.enums.Role;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Table(name = "users")
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -19,16 +21,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "nickname")
+    @Enumerated(EnumType.STRING)
+    private ACCOUNT_STATUS status;
+
     private String nickname;
 
-    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -36,7 +37,7 @@ public class User {
     private Set<ModeratedPost> moderatedPosts;
 
     @OneToMany(mappedBy = "author", targetEntity = UnmoderatedPost.class)
-    private Set<ModeratedPost> unmoderatedPosts;
+    private Set<UnmoderatedPost> unmoderatedPosts;
 
     @Column(name = "is_public_account")
     private boolean isPublicAccount;
@@ -67,4 +68,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
     )
     private Set<ModeratedPost> dislikedPosts;
+
+    public enum ACCOUNT_STATUS {
+        CONFIRMED, NOT_CONFIRMED, BANNED
+    }
 }
