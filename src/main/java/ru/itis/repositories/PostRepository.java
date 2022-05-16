@@ -4,12 +4,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.itis.models.ModeratedPost;
+import ru.itis.models.Post;
+import ru.itis.models.User;
+
+import java.util.Set;
 
 @Repository
-public interface ModeratedPostRepository extends JpaRepository<ModeratedPost, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Override
-    Page<ModeratedPost> findAll(Pageable pageable);
+    Page<Post> findAll(Pageable pageable);
 
+    Set<Post> findByAuthor(User user);
 }

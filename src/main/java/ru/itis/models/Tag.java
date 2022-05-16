@@ -24,5 +24,5 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<ModeratedPost> posts;
+    private Set<Post> posts;
 }

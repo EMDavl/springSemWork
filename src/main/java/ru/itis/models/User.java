@@ -33,11 +33,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "author", targetEntity = ModeratedPost.class)
-    private Set<ModeratedPost> moderatedPosts;
-
-    @OneToMany(mappedBy = "author", targetEntity = UnmoderatedPost.class)
-    private Set<UnmoderatedPost> unmoderatedPosts;
+    @OneToMany(mappedBy = "author", targetEntity = Post.class)
+    private Set<Post> posts;
 
     @Column(name = "is_public_account")
     private boolean isPublicAccount;
@@ -59,7 +56,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
     )
-    private Set<ModeratedPost> likedPosts;
+    private Set<Post> likedPosts;
 
     @ManyToMany()
     @JoinTable(
@@ -67,7 +64,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
     )
-    private Set<ModeratedPost> dislikedPosts;
+    private Set<Post> dislikedPosts;
 
     public enum ACCOUNT_STATUS {
         CONFIRMED, NOT_CONFIRMED, BANNED

@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.itis.models.ModeratedPost;
+import ru.itis.models.Post;
 import ru.itis.services.FeedService;
 
 @Controller
@@ -29,7 +29,7 @@ public class FeedMvcController {
         page = page == null ? 0 : page;
 
         Pageable pageable = PageRequest.of(page, paginationDefaultSize);
-        Page<ModeratedPost> posts = feedService.getPosts(pageable);
+        Page<Post> posts = feedService.getPosts(pageable);
         model.addAttribute("posts", posts);
         model.addAttribute("currentPage", posts.getNumber());
         return "feed";

@@ -110,6 +110,7 @@ public class ApplicationConfig {
     public FreeMarkerConfigurer freeMarkerConfig() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setTemplateLoaderPath("/templates/");
+        configurer.setDefaultEncoding("UTF-8");
         return configurer;
     }
 

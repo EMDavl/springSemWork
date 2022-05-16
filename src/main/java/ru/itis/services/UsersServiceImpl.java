@@ -4,14 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import ru.itis.dto.DefaultUserDto;
+import ru.itis.dto.PostCreationDto;
 import ru.itis.dto.SignUpDto;
+import ru.itis.models.BookAuthor;
+import ru.itis.models.Post;
 import ru.itis.models.User;
 import ru.itis.models.VerificationToken;
 import ru.itis.models.enums.Role;
+import ru.itis.repositories.PostRepository;
 import ru.itis.repositories.TokenRepository;
 import ru.itis.repositories.UsersRepository;
 
@@ -25,6 +31,9 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postsRepository;
+    private final BookAuthorService bookAuthorService;
+    private final TagService tagService;
     private final JavaMailSender mailSender;
     private static final String CONFIRMATION_SUBJECT = "Account confirmation";
 
@@ -104,6 +113,47 @@ public class UsersServiceImpl implements UsersService {
         userRepository.save(user);
         tokenRepository.delete(token);
         model.addAttribute(messageName, "Successfully confirmed");
+    }
+
+    @Override
+    public String getProfile(String email, Model model) {
+
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        User user = byEmail.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        final String USER_ATTRIBUTE = "user";
+
+        switch (user.getRole()) {
+            case DEFAULT:
+                model.addAttribute(USER_ATTRIBUTE, DefaultUserDto.from(user));
+                return "userProfile";
+            case MODERATOR:
+                return "moderatorProfile";
+            case ADMIN:
+                return "adminProfile";
+        }
+
+        throw new IllegalArgumentException("Wrong email");
+    }
+
+    @Override
+    @Transactional
+    public void createPost(PostCreationDto postDto, String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException(userEmail));
+        BookAuthor bookAuthor = bookAuthorService.findOrCreateByName(postDto.getBookAuthor());
+
+        Post post = Post.builder()
+                .author(user)
+                .bookAuthor(bookAuthor)
+                .bookName(postDto.getBookName())
+                .postText(postDto.getPostText())
+                .postTitle(postDto.getPostTitle())
+                .status(Post.PostStatus.ON_MODERATION)
+                .tags(tagService.findOrCreate(postDto.getTags()))
+                .build();
+
+        user.getPosts().add(post);
+        userRepository.save(user);
+
     }
 
     private void sendConfirmationMail(String to, String subj, String text) {

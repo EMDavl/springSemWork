@@ -24,5 +24,5 @@ public class BookAuthor {
     private String value;
 
     @OneToMany(mappedBy = "bookAuthor", fetch = FetchType.LAZY)
-    private Set<ModeratedPost> posts;
+    private Set<Post> posts;
 }
