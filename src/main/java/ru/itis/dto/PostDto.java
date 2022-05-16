@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostsDto {
+public class PostDto {
 
     private String postText;
     private String postTitle;
@@ -24,8 +24,8 @@ public class PostsDto {
     private long likes;
     private long dislikes;
 
-    public static PostsDto from(Post post) {
-        return PostsDto.builder()
+    public static PostDto from(Post post) {
+        return PostDto.builder()
                 .postText(post.getPostText())
                 .postTitle(post.getPostTitle())
                 .bookName(post.getBookName())
@@ -36,7 +36,7 @@ public class PostsDto {
                 .build();
     }
 
-    public static Set<PostsDto> from(Collection<Post> posts) {
-        return posts.stream().map(PostsDto::from).collect(Collectors.toSet());
+    public static Set<PostDto> from(Collection<Post> posts) {
+        return posts.stream().map(PostDto::from).collect(Collectors.toSet());
     }
 }

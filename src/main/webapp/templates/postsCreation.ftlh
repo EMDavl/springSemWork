@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1>Posts creation</h1>
-<form>
+<form action="/posts/create" method="post">
     <label for="postTitle">Title: </label>
     <input type="text" id="postTitle" name="postTitle" placeholder="Post title">
     <br>

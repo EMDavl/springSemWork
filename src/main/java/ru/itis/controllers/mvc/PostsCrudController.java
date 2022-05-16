@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.itis.dto.PostCreationDto;
-import ru.itis.services.UsersService;
+import ru.itis.services.PostsService;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostsCrudController {
 
-    private final UsersService service;
+    private final PostsService service;
 
     @GetMapping
     public String getPage() {
@@ -29,7 +29,9 @@ public class PostsCrudController {
         String userEmail = (String) auth.getPrincipal();
 
         post.setTags(Arrays.stream(post.getTagsString().split(";")).map(String::trim).collect(Collectors.toList()));
-        service.createPost(post, userEmail);
+
+        service.create(post, userEmail);
+
         return "redirect:/posts/personal/unmoderated";
     }
 }
