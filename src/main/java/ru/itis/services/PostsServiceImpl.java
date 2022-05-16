@@ -28,7 +28,7 @@ public class PostsServiceImpl implements PostsService {
     @Override
     @Transactional
     public PostDto create(PostCreationDto postDto, String userEmail) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException(userEmail));
+        User user = userRepository.findByEmailIgnoreCase(userEmail).orElseThrow(() -> new UsernameNotFoundException(userEmail));
         BookAuthor bookAuthor = bookAuthorService.findOrCreateByName(postDto.getBookAuthor());
 
         log.info("Post creation initialized. User {} post title {}", userEmail, postDto.getPostTitle());
