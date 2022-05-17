@@ -39,6 +39,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private BookAuthor bookAuthor;
 
+    @Enumerated(EnumType.STRING)
     private PostStatus status;
 
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.LAZY)

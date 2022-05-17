@@ -1,5 +1,7 @@
 package ru.itis.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.itis.models.Post;
@@ -10,7 +12,7 @@ import java.util.Set;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Set<Post> findByAuthor(User user);
+    Page<Post> findAllByStatus(Pageable pageable, Post.PostStatus status);
 
     Set<Post> findByAuthorAndStatus(User author, Post.PostStatus status);
 }

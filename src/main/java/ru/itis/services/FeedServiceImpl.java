@@ -15,6 +15,6 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public Page<Post> getPosts(Pageable pageable) {
-        return postRepository.findAll(pageable);
+        return postRepository.findAllByStatus(pageable, Post.PostStatus.APPROVED);
     }
 }

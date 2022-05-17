@@ -18,4 +18,5 @@ public interface UsersService {
     Set<PostDto> getModeratedPosts(String email);
 
     Set<PostDto> getUnmoderatedPosts(String email);
+
 }

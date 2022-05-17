@@ -10,6 +10,5 @@ public interface TagService {
 
     Set<Tag> findOrCreate(Collection<String> tags);
 
-    Tag findOrCreate(TagDto tags);
-
+    Tag findOrCreate(TagDto tag);
 }

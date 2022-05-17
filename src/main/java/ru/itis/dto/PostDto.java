@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Builder
 public class PostDto {
 
+    private Long id;
     private String postText;
     private String postTitle;
     private String bookName;
@@ -26,6 +27,7 @@ public class PostDto {
 
     public static PostDto from(Post post) {
         return PostDto.builder()
+                .id(post.getId())
                 .postText(post.getPostText())
                 .postTitle(post.getPostTitle())
                 .bookName(post.getBookName())
