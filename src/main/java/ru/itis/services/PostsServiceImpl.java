@@ -9,6 +9,7 @@ import ru.itis.dto.PostCreationDto;
 import ru.itis.dto.PostDto;
 import ru.itis.dto.PostUpdateDto;
 import ru.itis.dto.TagDto;
+import ru.itis.exceptions.AccountNotConfirmedException;
 import ru.itis.exceptions.PostNotFound;
 import ru.itis.models.BookAuthor;
 import ru.itis.models.Post;
@@ -38,6 +39,7 @@ public class PostsServiceImpl implements PostsService {
     @Transactional
     public PostDto create(PostCreationDto postDto, String userEmail) {
         User user = userRepository.findByEmailIgnoreCase(userEmail).orElseThrow(() -> new UsernameNotFoundException(userEmail));
+        checkIsUserConfirmed(user);
         BookAuthor bookAuthor = bookAuthorService.findOrCreateByName(postDto.getBookAuthor());
 
         log.info("Post creation instantiated. User {} post title {}", userEmail, postDto.getPostTitle());
@@ -61,6 +63,10 @@ public class PostsServiceImpl implements PostsService {
 
         log.info("Post created. Id {}", post.getId());
         return PostDto.from(post);
+    }
+
+    private void checkIsUserConfirmed(User user) {
+        if (user.getStatus().equals(User.ACCOUNT_STATUS.NOT_CONFIRMED)) throw new AccountNotConfirmedException();
     }
 
     @Override
@@ -134,7 +140,7 @@ public class PostsServiceImpl implements PostsService {
         return post
                 .map(value -> value.getAuthor()
                         .getEmail()
-                        .equalsIgnoreCase(email))
+                        .equalsIgnoreCase(email) && !value.getStatus().equals(Post.PostStatus.DELETED))
                 .orElse(false);
     }
 
