@@ -70,7 +70,11 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    public PostDto update(PostUpdateDto postDto) {
+    @Transactional
+    public boolean update(PostUpdateDto postDto, String authorEmail) {
+        if (!isValidInput(postDto.getId(), authorEmail)) {
+            return false;
+        }
 
         Post post = getPostById(postDto.getId());
 
@@ -78,7 +82,7 @@ public class PostsServiceImpl implements PostsService {
 
         taskService.createTask(post);
         postRepository.save(post);
-        return PostDto.from(post);
+        return true;
     }
 
     private void doUpdate(Post post, PostUpdateDto postDto) {
@@ -116,7 +120,7 @@ public class PostsServiceImpl implements PostsService {
     @Override
     public boolean delete(Long id, String email) {
         Optional<Post> postOpt = postRepository.findById(id);
-        if (isAuthorAndOptPresent(email, postOpt)) {
+        if (isValidInput(id, email)) {
             Post post = postOpt.get();
             post.setStatus(Post.PostStatus.DELETED);
             postRepository.save(post);
@@ -126,22 +130,22 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    public boolean isAuthor(Long postId, String email) {
+    public boolean isValidInput(Long postId, String email) {
         Optional<Post> postOpt = postRepository.findById(postId);
-        return isAuthorAndOptPresent(email, postOpt);
+
+        if (postOpt.isPresent()) {
+            Post post = postOpt.get();
+            User author = post.getAuthor();
+            checkIsUserConfirmed(author);
+            return author.getEmail().equalsIgnoreCase(email) && !post.getStatus().equals(Post.PostStatus.DELETED);
+        }
+
+        return false;
     }
 
     @Override
     public Post findById(Long postId) {
         return getPostById(postId);
-    }
-
-    private boolean isAuthorAndOptPresent(String email, Optional<Post> post) {
-        return post
-                .map(value -> value.getAuthor()
-                        .getEmail()
-                        .equalsIgnoreCase(email) && !value.getStatus().equals(Post.PostStatus.DELETED))
-                .orElse(false);
     }
 
     private Post getPostById(Long id) {

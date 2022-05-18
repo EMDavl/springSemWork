@@ -45,7 +45,7 @@ public class PersonalPostsController {
 
     @GetMapping("/edit")
     public String getEditPage(@RequestParam("id") Long postId, Model model, Authentication auth) {
-        if (!postsService.isAuthor(postId, (String) auth.getPrincipal())) {
+        if (!postsService.isValidInput(postId, (String) auth.getPrincipal())) {
             return "redirect:/feed";
         }
         model.addAttribute("post", PostUpdateDto.from(postsService.findById(postId)));
@@ -54,10 +54,9 @@ public class PersonalPostsController {
 
     @PostMapping("/edit")
     public String editPost(PostUpdateDto post, Authentication auth) {
-        if (!postsService.isAuthor(post.getId(), (String) auth.getPrincipal())) {
-            return "redirect:/feed";
+        if (postsService.update(post, (String) auth.getPrincipal())) {
+            return "redirect:/posts/personal/unmoderated";
         }
-        postsService.update(post);
-        return "redirect:/posts/personal/unmoderated";
+        return "redirect:/feed";
     }
 }

@@ -8,11 +8,11 @@ import ru.itis.models.Post;
 public interface PostsService {
     PostDto create(PostCreationDto postDto, String userEmail);
 
-    PostDto update(PostUpdateDto postDto);
+    boolean update(PostUpdateDto postDto, String authorEmail);
 
     boolean delete(Long id, String email);
 
-    boolean isAuthor(Long postId, String email);
+    boolean isValidInput(Long postId, String email);
 
     Post findById(Long postId);
 }
