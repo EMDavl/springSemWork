@@ -2,20 +2,25 @@ package ru.itis.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import ru.itis.dto.DefaultUserDto;
+import ru.itis.dto.PostDto;
 import ru.itis.dto.SignUpDto;
+import ru.itis.models.Post;
 import ru.itis.models.User;
 import ru.itis.models.VerificationToken;
 import ru.itis.models.enums.Role;
+import ru.itis.repositories.PostRepository;
 import ru.itis.repositories.TokenRepository;
 import ru.itis.repositories.UsersRepository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -25,11 +30,11 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+    private final MailService mailService;
+    private final PostRepository postRepository;
     private static final String CONFIRMATION_SUBJECT = "Account confirmation";
 
-    @Value("${mail.user}")
-    private String mailFrom;
+
     @Value("${confirmation.url}")
     private String confirmationUrl;
 
@@ -52,6 +57,10 @@ public class UsersServiceImpl implements UsersService {
                 .role(Role.DEFAULT)
                 .status(User.ACCOUNT_STATUS.NOT_CONFIRMED)
                 .nickname(formData.getNickname())
+                .dislikedPosts(new HashSet<>())
+                .subscribers(new HashSet<>())
+                .subscriptions(new HashSet<>())
+                .likedPosts(new HashSet<>())
                 .build();
 
         VerificationToken token = VerificationToken.builder()
@@ -63,10 +72,25 @@ public class UsersServiceImpl implements UsersService {
         userRepository.save(user);
         tokenRepository.save(token);
 
-        sendConfirmationMail(user.getEmail(), CONFIRMATION_SUBJECT, confirmationUrl + token.getValue().toString());
+        mailService.sendSignUpConfirmationMail(user.getEmail(), CONFIRMATION_SUBJECT, confirmationUrl + token.getValue().toString());
         return "redirect:/signIn";
     }
 
+    @Override
+    public Set<PostDto> getModeratedPosts(String email) {
+        User user = getUserFromEmail(email);
+        Set<Post> posts = postRepository.findByAuthorAndStatus(user, Post.PostStatus.APPROVED);
+        return PostDto.from(posts);
+    }
+
+    @Override
+    public Set<PostDto> getUnmoderatedPosts(String email) {
+        User user = getUserFromEmail(email);
+        Set<Post> posts = postRepository.findByAuthorAndStatus(user, Post.PostStatus.ON_MODERATION);
+        return PostDto.from(posts);
+    }
+
+    // TODO refactor
     @Override
     public void confirm(String code, Model model) {
 
@@ -106,16 +130,29 @@ public class UsersServiceImpl implements UsersService {
         model.addAttribute(messageName, "Successfully confirmed");
     }
 
-    private void sendConfirmationMail(String to, String subj, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    @Override
+    public String getProfile(String email, Model model) {
 
-        message.setFrom(mailFrom);
-        message.setTo(to);
-        message.setSubject(subj);
-        message.setText(text);
+        User user = getUserFromEmail(email);
+        final String USER_ATTRIBUTE = "user";
 
-        mailSender.send(message);
+        switch (user.getRole()) {
+            case DEFAULT:
+                model.addAttribute(USER_ATTRIBUTE, DefaultUserDto.from(user));
+                return "userProfile";
+            case MODERATOR:
+                return "moderatorProfile";
+            case ADMIN:
+                return "adminProfile";
+        }
+
+        throw new IllegalArgumentException("Wrong email");
     }
+
+    private User getUserFromEmail(String email) {
+        return userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new UsernameNotFoundException("User - " + email + " not found"));
+    }
+
 
     private boolean nicknameTaken(String nickname) {
         return userRepository.existsByNickname(nickname);

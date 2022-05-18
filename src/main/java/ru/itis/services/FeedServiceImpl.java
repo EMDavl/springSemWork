@@ -4,17 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.itis.models.ModeratedPost;
-import ru.itis.repositories.ModeratedPostRepository;
+import ru.itis.models.Post;
+import ru.itis.repositories.PostRepository;
 
 @Service
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
 
-    private final ModeratedPostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Override
-    public Page<ModeratedPost> getPosts(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    public Page<Post> getPosts(Pageable pageable) {
+        return postRepository.findAllByStatus(pageable, Post.PostStatus.APPROVED);
     }
 }

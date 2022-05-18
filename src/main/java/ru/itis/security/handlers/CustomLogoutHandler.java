@@ -32,7 +32,7 @@ public class CustomLogoutHandler implements LogoutHandler {
                 String value = authorization.getValue();
                 Optional<Auth> auth = repository.findByCookieValueAndUserEmail(value, (String) authentication.getPrincipal());
 
-                auth.ifPresent(repository::delete);
+                    auth.ifPresent(repository::delete);
 
                 authorization.setMaxAge(1);
                 response.addCookie(authorization);
