@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import ru.itis.models.enums.Role;
 import ru.itis.security.filters.CookieAuthFilter;
 import ru.itis.security.handlers.CustomLogoutHandler;
 
@@ -50,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/signUp/**")
                 .anonymous()
+                .antMatchers("/admin/**")
+                .hasAuthority(Role.ADMIN.name())
                 .anyRequest()
                 .authenticated();
 
