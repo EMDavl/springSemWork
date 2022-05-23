@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.SignUpDto;
 import ru.itis.services.UsersService;
 
@@ -33,7 +34,7 @@ public class SignUpController {
     }
 
     @PostMapping
-    public String signUp(SignUpDto credentials) {
-        return usersService.signUp(credentials);
+    public String signUp(SignUpDto credentials, @RequestParam("file") MultipartFile file) {
+        return usersService.signUp(credentials, file);
     }
 }
