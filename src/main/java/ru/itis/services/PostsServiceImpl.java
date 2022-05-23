@@ -16,10 +16,7 @@ import ru.itis.models.User;
 import ru.itis.repositories.PostRepository;
 import ru.itis.repositories.UsersRepository;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -207,6 +204,21 @@ public class PostsServiceImpl implements PostsService {
         }
 
         return getRatingChangesResponse(post);
+    }
+
+    @Override
+    public List<PostDto> getByTag(Long id) {
+        return PostDto.from(postRepository.findAllByTag(id));
+    }
+
+    @Override
+    public List<PostDto> getByBookAuthor(Long id) {
+        return PostDto.from(postRepository.findAllByBookAuthor(id));
+    }
+
+    @Override
+    public List<PostDto> getByBookName(String name) {
+        return PostDto.from(postRepository.findAllByBookName(name));
     }
 
     private ResponseEntity<RatingChanges> getRatingChangesResponse(Post post) {

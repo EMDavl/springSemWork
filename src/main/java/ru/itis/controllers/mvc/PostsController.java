@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.itis.dto.PostCreationDto;
 import ru.itis.dto.PostDto;
 import ru.itis.dto.RatingChanges;
@@ -54,5 +51,23 @@ public class PostsController {
     @PostMapping("/dislike/{postId}")
     public ResponseEntity<RatingChanges> dislike(@PathVariable("postId") Long postId, Authentication auth) {
         return service.dislike(postId, (String) auth.getPrincipal());
+    }
+
+    @GetMapping("/byTag")
+    public String getByTag(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("postPage", service.getByTag(id));
+        return "feed";
+    }
+
+    @GetMapping("/byAuthor")
+    public String getByAuthor(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("postPage", service.getByBookAuthor(id));
+        return "feed";
+    }
+
+    @GetMapping("/byBookName")
+    public String getByBookName(@RequestParam("name") String name, Model model) {
+        model.addAttribute("postPage", service.getByBookName(name));
+        return "feed";
     }
 }
