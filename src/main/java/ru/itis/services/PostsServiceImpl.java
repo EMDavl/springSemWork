@@ -2,13 +2,11 @@ package ru.itis.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.dto.PostCreationDto;
-import ru.itis.dto.PostDto;
-import ru.itis.dto.PostUpdateDto;
-import ru.itis.dto.TagDto;
+import ru.itis.dto.*;
 import ru.itis.exceptions.AccountNotConfirmedException;
 import ru.itis.exceptions.PostNotFound;
 import ru.itis.models.BookAuthor;
@@ -18,10 +16,7 @@ import ru.itis.models.User;
 import ru.itis.repositories.PostRepository;
 import ru.itis.repositories.UsersRepository;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -151,6 +146,88 @@ public class PostsServiceImpl implements PostsService {
     @Override
     public Post findById(Long postId) {
         return getPostById(postId);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<RatingChanges> like(Long postId, String email) {
+        User user = userRepository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFound::new);
+
+        if (user.getLikedPosts().contains(post)) {
+            user.getLikedPosts().remove(post);
+
+            userRepository.save(user);
+        } else {
+            user.getDislikedPosts().remove(post);
+            post.getDisliked().remove(user);
+
+            user.getLikedPosts().add(post);
+            post.getLiked().add(user);
+
+            userRepository.save(user);
+        }
+
+        return ResponseEntity
+                .accepted()
+                .body(RatingChanges.builder()
+                        .likesCount((long) post.getLiked().size())
+                        .dislikesCount((long) post.getDisliked().size())
+                        .build());
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<RatingChanges> dislike(Long postId, String email) {
+        User user = userRepository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFound::new);
+
+        if (user.getDislikedPosts().contains(post)) {
+            user.getDislikedPosts().remove(post);
+            post.getDisliked().remove(user);
+
+            userRepository.save(user);
+        } else {
+            user.getLikedPosts().remove(post);
+            post.getLiked().remove(user);
+
+            user.getDislikedPosts().add(post);
+            post.getDisliked().add(user);
+
+            userRepository.save(user);
+        }
+
+        return getRatingChangesResponse(post);
+    }
+
+    @Override
+    public List<PostDto> getByTag(Long id) {
+        return PostDto.from(postRepository.findAllByTag(id));
+    }
+
+    @Override
+    public List<PostDto> getByBookAuthor(Long id) {
+        return PostDto.from(postRepository.findAllByBookAuthor(id));
+    }
+
+    @Override
+    public List<PostDto> getByBookName(String name) {
+        return PostDto.from(postRepository.findAllByBookName(name));
+    }
+
+    private ResponseEntity<RatingChanges> getRatingChangesResponse(Post post) {
+        return ResponseEntity
+                .accepted()
+                .body(RatingChanges.builder()
+                        .likesCount((long) post.getLiked().size())
+                        .dislikesCount((long) post.getDisliked().size())
+                        .build());
     }
 
     private Post getPostById(Long id) {

@@ -15,17 +15,7 @@
 <br>
 <p>${user.getEmail()}</p>
 <p>${user.getNickname()}</p>
-<p>
-    Subscriptions:
-    <a href="/subscriptions/${user.getId()}">
-        ${user.getSubscriptions()}
-    </a>
 </p>
-<p>
-    Subscribers:
-    <a href="/subscribers/${user.getId()}">
-        ${user.getSubscribers()}</a></p>
-<p>
     Moderated posts:
     <a href="/posts/personal/moderated">
         ${user.getModeratedPostsAmount()}

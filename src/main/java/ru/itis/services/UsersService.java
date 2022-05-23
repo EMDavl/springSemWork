@@ -6,7 +6,7 @@ import ru.itis.dto.PostDto;
 import ru.itis.dto.SignUpDto;
 import ru.itis.models.Post;
 
-import java.util.Set;
+import java.util.List;
 
 public interface UsersService {
 
@@ -16,9 +16,9 @@ public interface UsersService {
 
     String getProfile(String email, Model model);
 
-    Set<PostDto> getModeratedPosts(String email);
+    List<PostDto> getModeratedPosts(String email);
 
-    Set<PostDto> getUnmoderatedPosts(String email);
+    List<PostDto> getUnmoderatedPosts(String email);
 
     void notifyPostWasDeclined(Post post);
 }
