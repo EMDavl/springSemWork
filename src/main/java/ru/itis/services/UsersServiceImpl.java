@@ -92,6 +92,11 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public void notifyPostWasDeclined(Post post) {
+        mailService.sendPostWasDeclined(post.getAuthor().getEmail(), post.getId());
+    }
+
+    @Override
     public void confirm(String code, Model model) {
 
         Optional<VerificationToken> tokenOpt =
