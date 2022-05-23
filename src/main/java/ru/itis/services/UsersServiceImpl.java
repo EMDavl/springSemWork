@@ -19,10 +19,7 @@ import ru.itis.repositories.PostRepository;
 import ru.itis.repositories.TokenRepository;
 import ru.itis.repositories.UsersRepository;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -78,14 +75,14 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Set<PostDto> getModeratedPosts(String email) {
+    public List<PostDto> getModeratedPosts(String email) {
         User user = getUserFromEmail(email);
         Set<Post> posts = postRepository.findByAuthorAndStatus(user, Post.PostStatus.APPROVED);
         return PostDto.from(posts);
     }
 
     @Override
-    public Set<PostDto> getUnmoderatedPosts(String email) {
+    public List<PostDto> getUnmoderatedPosts(String email) {
         User user = getUserFromEmail(email);
         Set<Post> posts = postRepository.findByAuthorAndStatus(user, Post.PostStatus.ON_MODERATION);
         return PostDto.from(posts);

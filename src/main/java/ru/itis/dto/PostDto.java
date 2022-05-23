@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.itis.models.Post;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class PostDto {
                 .build();
     }
 
-    public static Set<PostDto> from(Collection<Post> posts) {
-        return posts.stream().map(PostDto::from).collect(Collectors.toSet());
+    public static List<PostDto> from(Collection<Post> posts) {
+        return posts.stream().map(PostDto::from).collect(Collectors.toList());
     }
 }
