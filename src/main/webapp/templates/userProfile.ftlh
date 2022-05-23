@@ -13,13 +13,14 @@
 <a href="/logout">Logout</a>
 <a href="/posts/create">Create post</a>
 <br>
+<img src="${user.getFileUploadLink()}">
 <p>${user.getEmail()}</p>
 <p>${user.getNickname()}</p>
 </p>
-    Moderated posts:
-    <a href="/posts/personal/moderated">
-        ${user.getModeratedPostsAmount()}
-    </a>
+Moderated posts:
+<a href="/posts/personal/moderated">
+    ${user.getModeratedPostsAmount()}
+</a>
 </p>
 <p>
     Posts on moderation:

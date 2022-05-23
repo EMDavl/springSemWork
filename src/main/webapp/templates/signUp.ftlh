@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form action="/signUp" method="post">
+<form action="/signUp" method="post" enctype="multipart/form-data">
     <label for="email">Email: </label>
     <input type="email" name="email" id="email">
     <br>
@@ -18,6 +18,8 @@
     <br>
     <label for="nickname">Nickname: </label>
     <input type="text" name="nickname" id="nickname">
+    <br>
+    <input type="file" name="file" id="file">
     <br>
     <input type="submit" value="Submit!">
     <br>

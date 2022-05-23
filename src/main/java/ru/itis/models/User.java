@@ -37,6 +37,9 @@ public class User {
     @Column(name = "is_public_account")
     private boolean isPublicAccount;
 
+    @OneToOne
+    private FileInfo profilePhoto;
+
     @ManyToMany()
     @JoinTable(
             name = "likes",

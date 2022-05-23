@@ -19,6 +19,7 @@ public class DefaultUserDto {
     private long moderatedPostsAmount;
     private long unmoderatedPostsAmount;
     private boolean isPublicAccount;
+    private String fileUploadLink;
 
     public static DefaultUserDto from(User user) {
         return DefaultUserDto.builder()
@@ -33,6 +34,7 @@ public class DefaultUserDto {
                         .stream()
                         .filter(p -> p.getStatus().equals(Post.PostStatus.ON_MODERATION))
                         .count())
+                .fileUploadLink(user.getProfilePhoto().getLoadLink())
                 .isPublicAccount(user.isPublicAccount())
                 .build();
     }

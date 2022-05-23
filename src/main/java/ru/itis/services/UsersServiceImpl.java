@@ -7,10 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itis.dto.DefaultUserDto;
 import ru.itis.dto.EmailNicknameDto;
 import ru.itis.dto.PostDto;
 import ru.itis.dto.SignUpDto;
+import ru.itis.models.FileInfo;
 import ru.itis.models.Post;
 import ru.itis.models.User;
 import ru.itis.models.VerificationToken;
@@ -25,6 +27,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UsersServiceImpl implements UsersService {
 
+    private final FileService fileService;
     private final UsersRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
@@ -38,7 +41,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Transactional
-    public String signUp(SignUpDto formData) {
+    public String signUp(SignUpDto formData, MultipartFile file) {
 
         if (emailTaken(formData.getEmail())) {
             return "redirect:/signUp?error=email_taken";
@@ -64,6 +67,9 @@ public class UsersServiceImpl implements UsersService {
                 .user(user)
                 .value(UUID.randomUUID())
                 .build();
+
+        FileInfo fileInfo = fileService.uploadFile(file);
+        user.setProfilePhoto(fileInfo);
 
         userRepository.save(user);
         tokenRepository.save(token);
