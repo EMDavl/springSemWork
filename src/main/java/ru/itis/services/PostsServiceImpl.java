@@ -77,11 +77,14 @@ public class PostsServiceImpl implements PostsService {
         }
 
         Post post = getPostById(postDto.getId());
+        Post.PostStatus beforeUpdate = post.getStatus();
 
         doUpdate(post, postDto);
+        if (beforeUpdate.equals(Post.PostStatus.APPROVED))
+            taskService.createTask(post);
 
-        taskService.createTask(post);
         postRepository.save(post);
+
         return true;
     }
 
@@ -96,6 +99,7 @@ public class PostsServiceImpl implements PostsService {
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet())));
         post.setStatus(Post.PostStatus.ON_MODERATION);
+
     }
 
     private Set<Tag> getTagsChanges(Set<Tag> tags, Set<String> tagsFromForm) {
@@ -122,6 +126,7 @@ public class PostsServiceImpl implements PostsService {
         Optional<Post> postOpt = postRepository.findById(id);
         if (isValidInput(id, email)) {
             Post post = postOpt.get();
+            if (post.getStatus().equals(Post.PostStatus.ON_MODERATION)) taskService.deleteTaskByPost(post);
             post.setStatus(Post.PostStatus.DELETED);
             postRepository.save(post);
             return true;

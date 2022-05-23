@@ -4,6 +4,7 @@ package ru.itis.services;
 import org.springframework.ui.Model;
 import ru.itis.dto.PostDto;
 import ru.itis.dto.SignUpDto;
+import ru.itis.models.Post;
 
 import java.util.Set;
 
@@ -19,4 +20,5 @@ public interface UsersService {
 
     Set<PostDto> getUnmoderatedPosts(String email);
 
+    void notifyPostWasDeclined(Post post);
 }

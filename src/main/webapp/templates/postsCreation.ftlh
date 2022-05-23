@@ -14,7 +14,9 @@
     <input type="text" id="postTitle" name="postTitle" placeholder="Post title">
     <br>
     <label for="postText">Text: </label>
-    <textarea id="postText" name="postText" placeholder="Post text"/>
+    <textarea id="postText" name="postText" placeholder="Post text">
+
+    </textarea>
     <br>
     <label for="bookName">Book name: </label>
     <input type="text" id="bookName" name="bookName" placeholder="Book name">

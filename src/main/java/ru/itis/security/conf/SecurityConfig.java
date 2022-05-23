@@ -51,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/signUp/**")
                 .anonymous()
+                .antMatchers("/tasks")
+                .hasAuthority(Role.MODERATOR.name())
                 .antMatchers("/admin/**")
                 .hasAuthority(Role.ADMIN.name())
                 .antMatchers("/feed")

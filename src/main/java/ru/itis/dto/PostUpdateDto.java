@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class PostUpdateDto {
 
-    // TODO мб разделить на 2 класса для запроса и для ответа
     private Long id;
     private String postText;
     private String postTitle;
