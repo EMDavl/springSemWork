@@ -9,8 +9,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         function like(postId) {
-            const likeId = '#like' + postId;
-            const dislikeId = '#dislike' + postId;
             const likeCounterId = '#likeCounter' + postId;
             const dislikeCounterId = '#dislikeCounter' + postId;
 
@@ -24,9 +22,33 @@
             })
         }
 
+        function unsubscribe(postId) {
+            const subscribeId = '#subscribe' + postId
+
+            $.ajax({
+                url: "/subscribe/" + postId,
+                method: "POST",
+                success: function () {
+                    $(subscribeId).text("Подписаться на автора")
+                    $(subscribeId).click(subscribe(postId))
+                }
+            })
+        }
+
+        function subscribe(postId) {
+            const subscribeId = '#subscribe' + postId
+
+            $.ajax({
+                url: "/subscribe/" + postId,
+                method: "POST",
+                success: function () {
+                    $(subscribeId).text("Отписаться от автора")
+                    $(subscribeId).click(unsubscribe(postId))
+                }
+            })
+        }
+
         function dislike(postId) {
-            const likeId = '#like' + postId;
-            const dislikeId = '#dislike' + postId;
             const likeCounterId = '#likeCounter' + postId;
             const dislikeCounterId = '#dislikeCounter' + postId;
 
@@ -72,6 +94,7 @@
                 <a href="/posts/byTag?id=${tag.getId()}">${tag.getValue()}</a>
             </#list>
         </div>
+        <button id="subscribe${post.getId()}" onclick="subscribe(${post.getId()})">Подписаться на автора</button>
     </div>
 </#list>
 

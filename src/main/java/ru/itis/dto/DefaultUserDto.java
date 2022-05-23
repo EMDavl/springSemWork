@@ -19,8 +19,6 @@ public class DefaultUserDto {
     private long moderatedPostsAmount;
     private long unmoderatedPostsAmount;
     private boolean isPublicAccount;
-    private long subscribers;
-    private long subscriptions;
 
     public static DefaultUserDto from(User user) {
         return DefaultUserDto.builder()
@@ -36,8 +34,6 @@ public class DefaultUserDto {
                         .filter(p -> p.getStatus().equals(Post.PostStatus.ON_MODERATION))
                         .count())
                 .isPublicAccount(user.isPublicAccount())
-                .subscribers(user.getSubscribers().size())
-                .subscriptions(user.getSubscriptions().size())
                 .build();
     }
 }

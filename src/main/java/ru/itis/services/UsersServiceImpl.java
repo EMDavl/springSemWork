@@ -56,8 +56,6 @@ public class UsersServiceImpl implements UsersService {
                 .status(User.ACCOUNT_STATUS.NOT_CONFIRMED)
                 .nickname(formData.getNickname())
                 .dislikedPosts(new HashSet<>())
-                .subscribers(new HashSet<>())
-                .subscriptions(new HashSet<>())
                 .likedPosts(new HashSet<>())
                 .build();
 
@@ -156,7 +154,6 @@ public class UsersServiceImpl implements UsersService {
     private User getUserFromEmail(String email) {
         return userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new UsernameNotFoundException("User - " + email + " not found"));
     }
-
 
     private boolean nicknameTaken(String nickname) {
         return userRepository.existsByNickname(nickname);

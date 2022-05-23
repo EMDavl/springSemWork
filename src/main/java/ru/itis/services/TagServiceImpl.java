@@ -21,7 +21,6 @@ public class TagServiceImpl implements TagService {
     public Set<Tag> findOrCreate(Collection<String> tags) {
         Set<Tag> found = new HashSet<>();
         Set<Tag> toBeCreated = new HashSet<>();
-        // есть -> берем с базы и кладем в фаунд
 
         for (String tag : tags) {
             Optional<Tag> byName = tagRepository.findByNameIgnoreCase(tag);
