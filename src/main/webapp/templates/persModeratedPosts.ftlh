@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td>
-                    <button class="postButton" onclick="deleteRequest(${post.getId()})" value="Delete"/>
+                    <button class="postButton" onclick="deleteRequest(${post.getId()})">Удалить</button>
                 </td>
                 <td>
                     <form method="get" action="/posts/personal/edit?id=${post.getId()}">

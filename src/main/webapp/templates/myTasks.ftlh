@@ -9,7 +9,7 @@
 </head>
 <body>
 <#list tasks as task>
-    <h3>${task.getId()}</h3>
+    <h3><a href="/tasks/${task.getId()}">To this task</a></h3>
     <div class="post">
         <h3>${task.getPost().getPostTitle()}</h3>
         <span class="sideInformation">
@@ -24,17 +24,6 @@
                 ${tag.getValue()} ;
             </#list>
         </div>
-        <form action="/tasks/${task.getId()}" method="post">
-            <label> Approve
-                <input type="radio" name="verdict" value="approved" checked>
-            </label>
-            <br>
-            <label> Decline
-                <input type="radio" name="verdict" value="declined">
-            </label>
-            <br>
-            <input type="submit" value="Take task">
-        </form>
     </div>
 </#list>
 </body>

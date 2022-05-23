@@ -24,19 +24,19 @@ public class TaskController {
 
     }
 
+    @PostMapping()
+    public String takeTask(@RequestParam(name = "taskId") String taskId, Authentication auth) {
+
+        moderatorService.takeTask(((String) auth.getPrincipal()), Long.valueOf(taskId));
+        return "redirect:/tasks/" + taskId;
+
+    }
+
     @GetMapping("/{taskId}")
     public String taskPage(@PathVariable("taskId") Long taskId, Model model) {
 
         model.addAttribute("task", taskService.getTaskById(taskId));
         return "taskPage";
-
-    }
-
-    @PostMapping()
-    public String takeTask(Authentication auth, @RequestParam("taskId") Long taskId) {
-
-        moderatorService.takeTask(((String) auth.getPrincipal()), taskId);
-        return "redirect:/tasks/{taskId}";
 
     }
 

@@ -26,7 +26,7 @@
             </#list>
         </div>
         <form action="/tasks" method="post">
-            <input type="hidden" name="taskId" value="${task.getId()}">
+            <input type="hidden" id="taskId" name="taskId" value="${task.getId()}">
             <input type="submit" value="Take task">
         </form>
     </div>

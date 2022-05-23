@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.itis.dto.ApproveTaskDto;
 import ru.itis.exceptions.TaskNotFoundException;
 import ru.itis.models.ApproveTask;
@@ -48,6 +49,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void verdict(Long taskId, String verdict) {
 
         switch (verdict) {
