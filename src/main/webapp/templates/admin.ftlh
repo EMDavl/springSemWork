@@ -15,7 +15,8 @@
 
             const requestData = {
                 "email": $('#email').val(),
-                "password": $('#password').val()
+                "password": $('#password').val(),
+                "nickname": $('#nickname').val()
             }
 
             $.ajax({
@@ -56,6 +57,9 @@
 <h2>Create Moderator</h2>
 <label for="email">Moderator email</label>
 <input type="email" id="email">
+<br>
+<label for="nickname">Moderator nickname</label>
+<input type="text" id="nickname">
 <br>
 <label for="password">Moderator password</label>
 <input type="text" id="password">

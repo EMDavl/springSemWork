@@ -53,6 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous()
                 .antMatchers("/admin/**")
                 .hasAuthority(Role.ADMIN.name())
+                .antMatchers("/feed")
+                .hasAuthority(Role.DEFAULT.name())
                 .anyRequest()
                 .authenticated();
 

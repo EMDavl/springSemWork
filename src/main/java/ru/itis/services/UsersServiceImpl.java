@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import ru.itis.dto.DefaultUserDto;
+import ru.itis.dto.EmailNicknameDto;
 import ru.itis.dto.PostDto;
 import ru.itis.dto.SignUpDto;
 import ru.itis.models.Post;
@@ -90,7 +91,6 @@ public class UsersServiceImpl implements UsersService {
         return PostDto.from(posts);
     }
 
-    // TODO refactor
     @Override
     public void confirm(String code, Model model) {
 
@@ -141,8 +141,10 @@ public class UsersServiceImpl implements UsersService {
                 model.addAttribute(USER_ATTRIBUTE, DefaultUserDto.from(user));
                 return "userProfile";
             case MODERATOR:
+                model.addAttribute(USER_ATTRIBUTE, EmailNicknameDto.from(user));
                 return "moderatorProfile";
             case ADMIN:
+                model.addAttribute(USER_ATTRIBUTE, EmailNicknameDto.from(user));
                 return "adminProfile";
         }
 

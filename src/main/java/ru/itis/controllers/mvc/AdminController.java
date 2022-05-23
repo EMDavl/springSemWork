@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.dto.CredentialsDto;
 import ru.itis.dto.ModeratorDto;
+import ru.itis.dto.SignUpDto;
 import ru.itis.services.AdminService;
 
 @Controller
@@ -27,7 +27,7 @@ public class AdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ModeratorDto> createModerator(@RequestBody CredentialsDto credentials) {
+    public ResponseEntity<ModeratorDto> createModerator(@RequestBody SignUpDto credentials) {
         return adminService.createModerator(credentials);
     }
 
