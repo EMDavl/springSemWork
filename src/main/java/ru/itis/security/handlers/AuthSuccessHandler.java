@@ -41,6 +41,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 .build();
 
         authRepository.save(auth);
-        redirectStrategy.sendRedirect(request, response, "/feed");
+        redirectStrategy.sendRedirect(request, response, "/profile");
     }
 }

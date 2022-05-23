@@ -40,7 +40,5 @@
 <p>
     Account type: ${user.isPublicAccount()?string("public", "private")}
 </p>
-
-<a href="/profile/settings">profile settings</a>
 </body>
 </html>

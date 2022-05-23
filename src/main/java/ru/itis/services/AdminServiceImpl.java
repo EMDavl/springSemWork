@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.dto.CredentialsDto;
 import ru.itis.dto.ModeratorDto;
+import ru.itis.dto.SignUpDto;
 import ru.itis.models.User;
 import ru.itis.models.enums.Role;
 import ru.itis.repositories.TaskRepository;
@@ -29,8 +29,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<ModeratorDto> createModerator(CredentialsDto credentials) {
-        int i = 1;
+    public ResponseEntity<ModeratorDto> createModerator(SignUpDto credentials) {
         if (repository.existsByEmail(credentials.getEmail())) {
             return ResponseEntity.badRequest().build();
         }
@@ -41,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
                                 .email(credentials.getEmail())
                                 .password(passwordEncoder.encode(credentials.getPassword()))
                                 .isPublicAccount(false)
+                                .nickname(credentials.getNickname())
                                 .role(Role.MODERATOR)
                                 .status(User.ACCOUNT_STATUS.CONFIRMED)
                                 .build()

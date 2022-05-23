@@ -24,8 +24,8 @@ public class FeedMvcController {
     private final FeedService feedService;
 
     @GetMapping()
-    public String getPage(@RequestParam(value = "page", required = false) Integer page, Model model) {
-
+    public String getPage(@RequestParam(value = "page", required = false) Integer page,
+                          Model model) {
         page = page == null ? 0 : page;
 
         Pageable pageable = PageRequest.of(page, paginationDefaultSize);
