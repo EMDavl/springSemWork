@@ -151,11 +151,17 @@ public class PostsServiceImpl implements PostsService {
     @Override
     @Transactional
     public ResponseEntity<RatingChanges> like(Long postId, String email) {
-        User user = userRepository
-                .findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Optional<User> userOpt = userRepository
+                .findByEmailIgnoreCase(email);
 
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFound::new);
+        Optional<Post> postOpt = postRepository.findById(postId);
+
+        if (userOpt.isEmpty() || postOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = userOpt.get();
+        Post post = postOpt.get();
 
         if (user.getLikedPosts().contains(post)) {
             user.getLikedPosts().remove(post);
@@ -182,11 +188,17 @@ public class PostsServiceImpl implements PostsService {
     @Override
     @Transactional
     public ResponseEntity<RatingChanges> dislike(Long postId, String email) {
-        User user = userRepository
-                .findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Optional<User> userOpt = userRepository
+                .findByEmailIgnoreCase(email);
 
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFound::new);
+        Optional<Post> postOpt = postRepository.findById(postId);
+
+        if (userOpt.isEmpty() || postOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = userOpt.get();
+        Post post = postOpt.get();
 
         if (user.getDislikedPosts().contains(post)) {
             user.getDislikedPosts().remove(post);

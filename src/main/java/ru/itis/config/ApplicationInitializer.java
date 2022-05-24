@@ -37,6 +37,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         dispatcherServlet.setMultipartConfig(multipartConfigElement);
         dispatcherServlet.setLoadOnStartup(1);
         dispatcherServlet.addMapping("/");
+        dispatcherServlet.setInitParameter("throwExceptionIfNoHandlerFound", "true");
     }
 
 }

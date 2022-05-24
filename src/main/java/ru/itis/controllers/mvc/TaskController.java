@@ -1,6 +1,7 @@
 package ru.itis.controllers.mvc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import ru.itis.services.TaskService;
 @Controller
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
+@Slf4j
 public class TaskController {
 
     private final ModeratorService moderatorService;

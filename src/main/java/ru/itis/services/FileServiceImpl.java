@@ -1,6 +1,7 @@
 package ru.itis.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
     @Value("${storage.path}")
@@ -55,7 +57,7 @@ public class FileServiceImpl implements FileService {
         try (FileInputStream stream = new FileInputStream(storagePath + file.getStorageFileName())) {
             response.getOutputStream().write(stream.readAllBytes());
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            log.error(e.getMessage());
         }
 
     }
@@ -64,7 +66,7 @@ public class FileServiceImpl implements FileService {
         try {
             Files.copy(file.getInputStream(), Paths.get(storagePath, fileSystemName));
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            log.error(e.getMessage());
         }
     }
 
